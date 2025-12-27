@@ -46,4 +46,49 @@ func routes(_ app: Application) throws {
     
     print(app.routes.all)
     
+    // ------------------------------------------------------------------------------------
+    // MARK: Content (similar to Codable)
+    
+    app.post("persons") { request in
+        let person = try request.content.decode(Person.self)
+        return "Hello \(person.name)!"
+    }
+    
+    let decoder = JSONDecoder()
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    decoder.dateDecodingStrategy = .formatted(dateFormatter)
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+    
+    ContentConfiguration.global.use(decoder: decoder, for: .json)
+    
+    //    app.post("persons") { request in
+    //        let decoder = JSONDecoder()
+    //        let dateFormatter = DateFormatter()
+    //        dateFormatter.dateFormat = "yyyy-MM-dd"
+    //        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+    //        decoder.keyDecodingStrategy = .convertFromSnakeCase
+    //        
+    //        let person = try request.content.decode(Person.self, using: decoder)
+    //        return "Hello \(person.name)!, your DOB is \(person.dateOfBirth)"
+    //    }
+    
+    // URL Query
+    
+    app.get("persons") { request in
+        let person = try request.query.decode(Person.self)
+        let name: String = request.query["name"] ?? "Unknown"
+        return "Hello from GET \(name) or Greeting \(person.name)"
+    }
+}
+
+struct Person: Content {
+    let name: String
+    let dateOfBirth: Date
+}
+
+extension Person {
+    //    mutating func afterDecode() throws {
+    //        name = "Unknown" // override
+    //    }
 }
