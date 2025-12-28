@@ -80,15 +80,7 @@ func routes(_ app: Application) throws {
         let name: String = request.query["name"] ?? "Unknown"
         return "Hello from GET \(name) or Greeting \(person.name)"
     }
-}
-
-struct Person: Content {
-    let name: String
-    let dateOfBirth: Date
-}
-
-extension Person {
-    //    mutating func afterDecode() throws {
-    //        name = "Unknown" // override
-    //    }
+    
+    
+    try app.register(collection: PersonsController())
 }
