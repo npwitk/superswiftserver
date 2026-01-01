@@ -50,7 +50,7 @@ func routes(_ app: Application) throws {
     // MARK: Content (similar to Codable)
     
     app.post("persons") { request in
-        let person = try request.content.decode(Person.self)
+        let person = try request.content.decode(LegacyPerson.self)
         return "Hello \(person.name)!"
     }
     
@@ -76,7 +76,7 @@ func routes(_ app: Application) throws {
     // URL Query
     
     app.get("persons") { request in
-        let person = try request.query.decode(Person.self)
+        let person = try request.query.decode(LegacyPerson.self)
         let name: String = request.query["name"] ?? "Unknown"
         return "Hello from GET \(name) or Greeting \(person.name)"
     }
